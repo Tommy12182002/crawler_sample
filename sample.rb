@@ -2,10 +2,19 @@ $:.unshift File.expand_path(File.dirname(__FILE__))
 require 'capybara/dsl'
 require 'site_prism'
 require 'crawler'
+require 'selenium-webdriver'
 
-# User chromedriver with capybara.
+# Use chromedriver with capybara.
+# If you don't want use headless mode, remove desired_capabilities.
 Capybara.register_driver :selenium do |app|
-  Capybara::Selenium::Driver.new(app, browser: :chrome)
+  Capybara::Selenium::Driver.new(app,
+    browser: :chrome,
+    desired_capabilities: Selenium::WebDriver::Remote::Capabilities.chrome(
+      chrome_options: {
+        args: %w(headless disable-gpu window-size=1680,1050),
+      }
+    )
+  )
 end
 
 # Using selenium, not rack test.
